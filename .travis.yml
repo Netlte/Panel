@@ -1,0 +1,44 @@
+os: linux
+dist: xenial
+language: php
+php:
+    - 7.4
+    - 8.0
+
+before_install:
+    # Turn off XDebug
+    - phpenv config-rm xdebug.ini || return 0
+
+install:
+    # Composer
+    - travis_retry composer update --no-progress --prefer-dist --dev
+
+script:
+    # Tests
+    - composer run-script tests
+
+after_failure:
+    # Print *.actual content
+    - for i in $(find tests -name \*.actual); do echo "--- $i"; cat $i; echo; echo; done
+
+jobs:
+    include:
+        - env: title="CodeStyle"
+          stage: CodeStyle
+          php: 7.4
+          install:
+              - travis_retry composer update --no-progress --prefer-dist --dev
+          script:
+              - composer run-script cs
+
+        - env: title="PHPStan"
+          stage: Phpstan
+          php: 7.4
+          install:
+              - travis_retry composer update --no-progress --prefer-dist --dev
+          script:
+              - composer run-script analyse
+
+cache:
+    directories:
+        - $HOME/.composer/cache

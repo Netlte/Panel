@@ -1,0 +1,9 @@
+{varType \Netlte\Panel\Header $control}
+<h1>
+    {$control->getHeading()|translate}
+    <small n:if="$control->getSubheading() !== null">{$control->getSubheading()|translate}</small>
+    <span n:snippet="actions" class="actions">
+        {control actionbar}
+    </span>
+</h1>
+{control breadcrumbs}

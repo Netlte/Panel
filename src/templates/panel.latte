@@ -1,0 +1,23 @@
+{varType \Netlte\Panel\AbstractPanel $control}
+{varType \stdClass[] $flashes}
+
+<!-- Content Header (Page header) -->
+<section n:snippet="header" class="content-header">
+    {control header}
+</section>
+
+<!-- Main content -->
+<section class="content">
+    {snippet flashes}
+        <div n:foreach="$flashes as $flash" class="alert alert-{$flash->type} alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            {$flash->message}
+        </div>
+    {/snippet}
+
+    <div n:snippet="content" n:inner-foreach="$control->getComponents() as $name => $component">
+        {continueIf $name === 'header'}
+        {continueIf $control->isComponentHidden($name)}
+		{control $component}
+    </div>
+</section>
